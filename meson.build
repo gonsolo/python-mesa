@@ -1,6 +1,6 @@
 # meson_bindings/meson.build
 
-project('mesa-python', 'cpp', version: '0.1.0',
+project('python-mesa', 'cpp', version: '0.1.0',
     default_options: ['cpp_std=c++17'])
 
 # --- Find Python and Pybind11 ---

@@ -1,1 +1,6 @@
 dist
+pkg
+python-mesa-0.1.0-1-x86_64.pkg.tar.zst
+python-mesa-debug-0.1.0-1-x86_64.pkg.tar.zst
+python_mesa-0.1.0-cp313-cp313-linux_x86_64.whl
+src
