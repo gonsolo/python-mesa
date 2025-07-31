@@ -1,0 +1,2 @@
+option('mesa_src_dir', type: 'string', description: 'Path to the Mesa source directory')
+option('mesa_build_dir', type: 'string', description: 'Path to the Mesa build directory')
