@@ -1,5 +1,6 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include "pybind11/detail/common.h"
 
 #include "compiler/nir/nir.h"
 #include "compiler/shader_enums.h"
@@ -38,7 +39,25 @@ PYBIND11_MODULE(mesa3d, m) {
                        "Lower 'fge' and 'flt' to 'fsl' and 'fsub'.")
         ;
 
+    py::class_<shader_info>(m, "shader_info")
+        .def(py::init<>())
+        .def_readwrite("name", &shader_info::name)
+        .def_property("stage",
+            [](const shader_info &s) { return s.stage; },
+            [](shader_info &s, gl_shader_stage val) { s.stage = val; },
+            "The shader stage.")
+        ;
+
+    py::class_<nir_shader>(m, "nir_shader");
+
     m.def("nir_shader_create", &nir_shader_create,
         "Creates a new NIR shader.",
-        py::arg("mem_ctx"), py::arg("stage"), py::arg("options"), py::arg("si"));
+        py::arg("mem_ctx"), py::arg("stage"), py::arg("options"), py::arg("info"),
+        py::return_value_policy::reference);
+
+    py::class_<nir_function>(m, "nir_function");
+
+    m.def("nir_function_create", &nir_function_create,
+          py::arg("shader"), py::arg("name"),
+          py::return_value_policy::reference);
 }

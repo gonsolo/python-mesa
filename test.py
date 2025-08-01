@@ -1,17 +1,12 @@
 import ctypes
 import mesa3d
 
-all_attributes = dir(mesa3d)
-functions = [attr for attr in all_attributes if callable(getattr(mesa3d, attr))]
-print(functions)
-
 mem_ctx = mesa3d.ralloc_context(None)
-print(mem_ctx)
-mesa3d.ralloc_free(mem_ctx)
-
-print(f"gl_shader_stage compute: {mesa3d.gl_shader_stage.COMPUTE}")
-
+stage = mesa3d.gl_shader_stage.COMPUTE
 options = mesa3d.nir_shader_compiler_options()
-print(options)
+si = mesa3d.shader_info()
+si.stage = stage
+shader = mesa3d.nir_shader_create(mem_ctx, stage, options, si)
+function = mesa3d.nir_function_create(shader, "f")
 
-#shader = mesa3d.nir_shader_create(mem_ctx)
+mesa3d.ralloc_free(mem_ctx)
