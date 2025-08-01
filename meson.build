@@ -1,6 +1,6 @@
 # meson_bindings/meson.build
 
-project('python-mesa', 'cpp', version: '0.1.0',
+project('python-mesa3d', 'cpp', version: '0.1.0',
     default_options: ['cpp_std=c++17'])
 
 # --- Find Python and Pybind11 ---
@@ -49,7 +49,7 @@ endif
 
 # --- Create the Python Extension Module ---
 python.extension_module(
-    'mesanir',
+    'mesa3d',
     'bindings.cpp',
     dependencies: [
         pybind11_dep,

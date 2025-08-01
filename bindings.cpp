@@ -5,7 +5,7 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(mesanir, m) {
+PYBIND11_MODULE(mesa3d, m) {
     m.doc() = "Python bindings for Mesa's NIR compiler.";
 
     m.def("nir_shader_create", &nir_shader_create,
