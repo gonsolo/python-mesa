@@ -101,7 +101,28 @@ PYBIND11_MODULE(mesa3d, m) {
         py::arg("shader"),
         py::arg("when"));
 
-    py::class_<glsl_type> glsl_type_class(m, "glsl_type");
+    py::class_<glsl_struct_field>(m, "glsl_struct_field")
+        .def_readonly("name", &glsl_struct_field::name)
+        .def_readonly("type", &glsl_struct_field::type, py::return_value_policy::reference_internal)
+        .def_readonly("offset", &glsl_struct_field::offset);
+
+    py::class_<glsl_type>(m, "glsl_type")
+        .def_property_readonly("name",
+            [](const glsl_type &self) {
+                return glsl_get_type_name(&self);
+            })
+        .def_property_readonly("array",
+            [](const glsl_type &self) {
+                return self.fields.array;
+            },
+            py::return_value_policy::reference_internal)
+        .def_property_readonly("structure",
+            [](const glsl_type &self) {
+                return self.fields.structure;
+            },
+            py::return_value_policy::reference_internal)
+        .def("is_array", &glsl_type_is_array)
+        .def("is_struct", &glsl_type_is_struct);
 
     m.def("glsl_int_type", &glsl_int_type,
         py::return_value_policy::reference);
@@ -134,7 +155,8 @@ PYBIND11_MODULE(mesa3d, m) {
             [](nir_variable::nir_variable_data& self, bool value) { self.explicit_binding = value; });
 
     py::class_<nir_variable, std::unique_ptr<nir_variable, py::nodelete>>(m, "nir_variable")
-        .def_readwrite("data", &nir_variable::data);
+        .def_readwrite("data", &nir_variable::data)
+        .def_readwrite("type", &nir_variable::type);
 
     py::enum_<nir_alu_type>(m, "nir_alu_type")
         .value("nir_type_int32", nir_type_int32)

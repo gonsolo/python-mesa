@@ -24,3 +24,9 @@ ft32 = mesa3d.nir_type_float32
 immi = mesa3d.nir_imm_int(builder, 33)
 immf = mesa3d.nir_imm_float(builder, 33.3)
 
+var_type = nir_var.type
+var_type_name = var_type.name
+if var_type.is_array():
+    fields_array = var_type.array
+elif var_type.is_structure():
+    fields_structure = var_type.structure
