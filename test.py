@@ -9,5 +9,6 @@ si.stage = stage
 shader = mesa3d.nir_shader_create(mem_ctx, stage, options, si)
 function = mesa3d.nir_function_create(shader, "f")
 function_impl = mesa3d.nir_function_impl_create(function)
-
+builder = mesa3d.nir_builder_create(function_impl)
+# ...
 mesa3d.ralloc_free(mem_ctx)

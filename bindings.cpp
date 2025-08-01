@@ -3,6 +3,7 @@
 #include "pybind11/detail/common.h"
 
 #include "compiler/nir/nir.h"
+#include "compiler/nir/nir_builder.h"
 #include "compiler/shader_enums.h"
 
 namespace py = pybind11;
@@ -66,4 +67,10 @@ PYBIND11_MODULE(mesa3d, m) {
     m.def("nir_function_impl_create", &nir_function_impl_create,
           py::arg("function"),
           py::return_value_policy::reference);
+
+    py::class_<nir_builder>(m, "nir_builder");
+
+    m.def("nir_builder_create", &nir_builder_create,
+        py::arg("impl"),
+        py::return_value_policy::reference);
 }
