@@ -11,4 +11,7 @@ mesa3d.ralloc_free(mem_ctx)
 
 print(f"gl_shader_stage compute: {mesa3d.gl_shader_stage.COMPUTE}")
 
+options = mesa3d.nir_shader_compiler_options()
+print(options)
+
 #shader = mesa3d.nir_shader_create(mem_ctx)
