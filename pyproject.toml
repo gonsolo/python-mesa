@@ -16,9 +16,3 @@ license = { text = "MIT" }
 authors = [
   { name = "Your Name", email = "your.email@example.com" }
 ]
-
-[tool.meson-python.args]
-setup = [
-  "-Dmesa_src_dir=/home/gonsolo/work/mesa",
-  "-Dmesa_build_dir=/home/gonsolo/work/mesa/build" # Assuming your Meson build directory is 'build'
-]

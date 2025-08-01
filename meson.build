@@ -7,7 +7,9 @@ project('python-mesa3d', 'cpp', version: '0.1.0',
 python = import('python').find_installation()
 pybind11_dep = dependency('pybind11', required: true)
 
-#mesa_proj = subproject('mesa', default_options: ['default_library=static'])
+# --- Use Mesa as a subproject ---
+# The Mesa source code must be in the 'subprojects/mesa' directory.
+# Meson will configure and build it directly.
 mesa_proj = subproject(
     'mesa',
     default_options:  [
@@ -22,10 +24,10 @@ mesa_proj = subproject(
         'valgrind=disabled'
     ]
 )
-mesa_dep = mesa_proj.get_variable('idep_nir')
 
-# Use the 'idep_nir' internal dependency provided by the subproject
-#py_mod.add_unstable_dependency(mesa_proj.get_variable('idep_nir'))
+# Retrieve the 'idep_nir' internal dependency from the Mesa subproject.
+# This gives us the necessary include paths and link libraries.
+mesa_dep = mesa_proj.get_variable('idep_nir')
 
 # --- Check for platform features and add preprocessor defines ---
 cc = meson.get_compiler('cpp')
@@ -59,7 +61,4 @@ python.extension_module(
     cpp_args: extra_args,
     install: true,
 )
-
-
-
 
