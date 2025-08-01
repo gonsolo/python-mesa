@@ -127,5 +127,12 @@ PYBIND11_MODULE(mesa3d, m) {
         .value("nir_var_mem_ssbo", nir_var_mem_ssbo)
         .export_values();
 
-    py::class_<nir_variable> nir_variable_class(m, "nir_variable");
+    py::class_<nir_variable::nir_variable_data>(m, "nir_variable_data")
+        .def_readwrite("binding", &nir_variable::nir_variable_data::binding)
+        .def_property("explicit_binding",
+            [](const nir_variable::nir_variable_data& self) { return self.explicit_binding; },
+            [](nir_variable::nir_variable_data& self, bool value) { self.explicit_binding = value; });
+
+    py::class_<nir_variable, std::unique_ptr<nir_variable, py::nodelete>>(m, "nir_variable")
+        .def_readwrite("data", &nir_variable::data);
 }
