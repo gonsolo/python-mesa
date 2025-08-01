@@ -14,7 +14,7 @@ $(PACKAGE): $(WHEEL)
 $(WHEEL): bindings.cpp
 	python -m build --wheel
 clean:
-	rm -rf dist pkg src subprojects/mesa *.zst *.whl
+	rm -rf dist pkg src *.zst *.whl
 	yay -R python-mesa3d
 
 .PHONY: all build install clean
