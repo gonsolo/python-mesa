@@ -107,4 +107,25 @@ PYBIND11_MODULE(mesa3d, m) {
         py::return_value_policy::reference);
     m.def("glsl_float_type", &glsl_float_type,
         py::return_value_policy::reference);
+
+    m.def("glsl_array_type", &glsl_array_type,
+        py::arg("element"),
+        py::arg("array_size"),
+        py::arg("explicit_stride"),
+        py::return_value_policy::reference);
+
+    m.def("glsl_type_singleton_init_or_ref", &glsl_type_singleton_init_or_ref);
+
+    m.def("nir_variable_create", &nir_variable_create,
+        py::arg("shader"),
+        py::arg("mode"),
+        py::arg("type"),
+        py::arg("name"),
+        py::return_value_policy::reference);
+
+    py::enum_<nir_variable_mode>(m, "nir_variable_mode")
+        .value("nir_var_mem_ssbo", nir_var_mem_ssbo)
+        .export_values();
+
+    py::class_<nir_variable> nir_variable_class(m, "nir_variable");
 }
