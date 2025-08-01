@@ -1,19 +1,11 @@
-import ctypes
 import mesa3d
 
-#mem_ctx = mesa3d.ralloc_context(None)
 stage = mesa3d.gl_shader_stage.COMPUTE
 options = mesa3d.nir_shader_compiler_options()
-#si = mesa3d.shader_info()
-#si.stage = stage
-#shader = mesa3d.nir_shader_create(mem_ctx, stage, options, si)
-#function = mesa3d.nir_function_create(shader, "f")
-#function_impl = mesa3d.nir_function_impl_create(function)
-#builder = mesa3d.nir_builder_create(function_impl)
-
 builder = mesa3d.nir_builder_init_simple_shader(stage, options, "simple")
 main = mesa3d.nir_shader_get_function_for_name(builder.shader, "main");
 mesa3d.nir_validate_shader(builder.shader, None);
 
-# ...
-#mesa3d.ralloc_free(mem_ctx)
+
+i = mesa3d.glsl_int_type()
+f = mesa3d.glsl_float_type()

@@ -100,4 +100,11 @@ PYBIND11_MODULE(mesa3d, m) {
     m.def("nir_validate_shader", &nir_validate_shader,
         py::arg("shader"),
         py::arg("when"));
+
+    py::class_<glsl_type> glsl_type_class(m, "glsl_type");
+
+    m.def("glsl_int_type", &glsl_int_type,
+        py::return_value_policy::reference);
+    m.def("glsl_float_type", &glsl_float_type,
+        py::return_value_policy::reference);
 }
