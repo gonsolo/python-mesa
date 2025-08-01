@@ -60,4 +60,10 @@ PYBIND11_MODULE(mesa3d, m) {
     m.def("nir_function_create", &nir_function_create,
           py::arg("shader"), py::arg("name"),
           py::return_value_policy::reference);
+
+    py::class_<nir_function_impl>(m, "nir_function_impl");
+
+    m.def("nir_function_impl_create", &nir_function_impl_create,
+          py::arg("function"),
+          py::return_value_policy::reference);
 }
