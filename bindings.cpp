@@ -57,26 +57,30 @@ PYBIND11_MODULE(mesa3d, m) {
             "The shader stage.")
         ;
 
-    py::class_<nir_shader>(m, "nir_shader");
+    py::class_<nir_shader> nir_shader_class(m, "nir_shader");
 
     m.def("nir_shader_create", &nir_shader_create,
         "Creates a new NIR shader.",
         py::arg("mem_ctx"), py::arg("stage"), py::arg("options"), py::arg("info"),
         py::return_value_policy::reference);
 
-    py::class_<nir_function>(m, "nir_function");
+    py::class_<nir_function> nir_function_class(m, "nir_function");
 
     m.def("nir_function_create", &nir_function_create,
           py::arg("shader"), py::arg("name"),
           py::return_value_policy::reference);
 
-    py::class_<nir_function_impl>(m, "nir_function_impl");
+    py::class_<nir_function_impl> nir_function_impl_class(m, "nir_function_impl");
 
     m.def("nir_function_impl_create", &nir_function_impl_create,
           py::arg("function"),
           py::return_value_policy::reference);
 
-    py::class_<nir_builder>(m, "nir_builder");
+    py::class_<nir_builder>(m, "nir_builder")
+        .def_property_readonly("shader", [](nir_builder *builder) {
+            return builder->shader;
+        },
+        py::return_value_policy::reference);
 
     m.def("nir_builder_create", &nir_builder_create,
         py::arg("impl"),
@@ -87,4 +91,13 @@ PYBIND11_MODULE(mesa3d, m) {
         py::arg("options"),
         py::arg("name"),
         py::return_value_policy::reference);
+
+    m.def("nir_shader_get_function_for_name", &nir_shader_get_function_for_name,
+        py::arg("shader"),
+        py::arg("name"),
+        py::return_value_policy::reference);
+
+    m.def("nir_validate_shader", &nir_validate_shader,
+        py::arg("shader"),
+        py::arg("when"));
 }
