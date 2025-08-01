@@ -8,6 +8,14 @@
 
 namespace py = pybind11;
 
+static nir_builder
+nir_builder_init_simple_shader_wrapper(gl_shader_stage stage,
+                                      const nir_shader_compiler_options *options,
+                                      const char *name)
+{
+    return nir_builder_init_simple_shader(stage, options, name);
+}
+
 PYBIND11_MODULE(mesa3d, m) {
     m.doc() = "Python bindings for Mesa's NIR compiler.";
 
@@ -72,5 +80,11 @@ PYBIND11_MODULE(mesa3d, m) {
 
     m.def("nir_builder_create", &nir_builder_create,
         py::arg("impl"),
+        py::return_value_policy::reference);
+
+    m.def("nir_builder_init_simple_shader", &nir_builder_init_simple_shader_wrapper,
+        py::arg("stage"),
+        py::arg("options"),
+        py::arg("name"),
         py::return_value_policy::reference);
 }
