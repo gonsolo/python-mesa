@@ -135,4 +135,21 @@ PYBIND11_MODULE(mesa3d, m) {
 
     py::class_<nir_variable, std::unique_ptr<nir_variable, py::nodelete>>(m, "nir_variable")
         .def_readwrite("data", &nir_variable::data);
+
+    py::enum_<nir_alu_type>(m, "nir_alu_type")
+        .value("nir_type_int32", nir_type_int32)
+        .value("nir_type_float32", nir_type_float32)
+        .export_values();
+
+    py::class_<nir_def> nir_def_class(m, "nir_def");
+
+    m.def("nir_imm_int", &nir_imm_int,
+        py::arg("builder"),
+        py::arg("x"),
+        py::return_value_policy::reference);
+
+    m.def("nir_imm_float", &nir_imm_float,
+        py::arg("builder"),
+        py::arg("x"),
+        py::return_value_policy::reference);
 }

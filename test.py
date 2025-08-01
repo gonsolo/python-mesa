@@ -6,8 +6,7 @@ builder = mesa3d.nir_builder_init_simple_shader(stage, options, "simple")
 main = mesa3d.nir_shader_get_function_for_name(builder.shader, "main");
 
 mesa3d.glsl_type_singleton_init_or_ref()
-i = mesa3d.glsl_int_type()
-f = mesa3d.glsl_float_type()
+ft = mesa3d.glsl_float_type()
 it = mesa3d.glsl_int_type()
 at = mesa3d.glsl_array_type(it, 10, 0)
 
@@ -18,3 +17,10 @@ nir_var = mesa3d.nir_variable_create(builder.shader,
 nir_var.data.binding = 66
 nir_var.data.explicit_binding = True
 mesa3d.nir_validate_shader(builder.shader, None);
+
+it32 = mesa3d.nir_type_int32
+ft32 = mesa3d.nir_type_float32
+
+immi = mesa3d.nir_imm_int(builder, 33)
+immf = mesa3d.nir_imm_float(builder, 33.3)
+
