@@ -2,7 +2,8 @@ VERSION=0.1.0
 WHEEL=dist/python_mesa3d-$(VERSION)-cp313-cp313-linux_x86_64.whl
 PACKAGE=python-mesa3d-$(VERSION)-1-x86_64.pkg.tar.zst
 
-all: install
+all: install run
+run:
 	python test.py
 install: build
 	makepkg -si --noconfirm
@@ -16,5 +17,7 @@ $(WHEEL): bindings.cpp
 clean:
 	rm -rf dist pkg src *.zst *.whl
 	yay -R python-mesa3d
+gdb:
+	gdb -ex=r --args python test.py
 
-.PHONY: all build install clean
+.PHONY: all build gdb install clean

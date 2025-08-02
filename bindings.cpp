@@ -16,6 +16,14 @@ nir_builder_init_simple_shader_wrapper(gl_shader_stage stage,
     return nir_builder_init_simple_shader(stage, options, name);
 }
 
+py::object wrap_nir_load_ssbo(py::object builder, int num_components, int bit_size, py::object src0, py::object src1) {
+    nir_builder* b = py::cast<nir_builder*>(builder);
+    nir_def* s0 = py::cast<nir_def*>(src0);
+    nir_def* s1 = py::cast<nir_def*>(src1);
+
+    return py::cast(nir_load_ssbo(b, num_components, bit_size, s0, s1));
+}
+
 PYBIND11_MODULE(mesa3d, m) {
     m.doc() = "Python bindings for Mesa's NIR compiler.";
 
@@ -64,19 +72,23 @@ PYBIND11_MODULE(mesa3d, m) {
         py::arg("mem_ctx"), py::arg("stage"), py::arg("options"), py::arg("info"),
         py::return_value_policy::reference);
 
-    py::class_<nir_function> nir_function_class(m, "nir_function");
+    py::class_<nir_function>(m, "nir_function")
+        .def_readonly("impl", &nir_function::impl);
 
     m.def("nir_function_create", &nir_function_create,
           py::arg("shader"), py::arg("name"),
           py::return_value_policy::reference);
 
-    py::class_<nir_function_impl> nir_function_impl_class(m, "nir_function_impl");
+    py::class_<nir_function_impl>(m, "nir_function_impl")
+        .def_readonly("body", &nir_function_impl::body);
 
     m.def("nir_function_impl_create", &nir_function_impl_create,
           py::arg("function"),
           py::return_value_policy::reference);
 
     py::class_<nir_builder>(m, "nir_builder")
+        .def_readwrite("cursor", &nir_builder::cursor)
+        .def_readwrite("impl", &nir_builder::impl)
         .def_property_readonly("shader", [](nir_builder *builder) {
             return builder->shader;
         },
@@ -178,4 +190,41 @@ PYBIND11_MODULE(mesa3d, m) {
     m.def("glsl_get_explicit_size", &glsl_get_explicit_size,
         py::arg("type"),
         py::arg("align_to_stride"));
+
+    m.def("nir_imul_imm", &nir_imul_imm,
+        py::arg("builder"),
+        py::arg("x"),
+        py::arg("y"),
+        py::return_value_policy::reference);
+
+    m.def("glsl_get_vector_elements", &glsl_get_vector_elements,
+        py::arg("type"));
+
+    m.def("glsl_get_bit_size", &glsl_get_bit_size,
+        py::arg("type"));
+
+     m.def("nir_load_ssbo", &wrap_nir_load_ssbo, "A C++ wrapper for the nir_load_ssbo macro.",
+         py::arg("builder"),
+         py::arg("num_components"),
+         py::arg("bit_size"),
+         py::arg("src0"),
+         py::arg("src1"));
+
+    m.def("nir_load_var", &nir_load_var,
+        py::arg("builder"),
+        py::arg("var"),
+        py::return_value_policy::reference);
+
+    m.def("nir_start_block", &nir_start_block,
+        py::arg("impl"),
+        py::return_value_policy::reference);
+
+    m.def("nir_after_block", &nir_after_block,
+        py::arg("block"));
+
+    py::class_<exec_list> exec_list_class(m, "exec_list");
+
+    py::class_<nir_block> nir_block_class(m, "nir_block");
+
+    py::class_<nir_cursor> nir_cursor_class(m, "nir_cursor");
 }
