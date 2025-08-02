@@ -30,3 +30,5 @@ if var_type.is_array():
     fields_array = var_type.array
 elif var_type.is_structure():
     fields_structure = var_type.structure
+
+s = mesa3d.glsl_get_explicit_size(var_type, True)

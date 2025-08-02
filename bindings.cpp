@@ -174,4 +174,8 @@ PYBIND11_MODULE(mesa3d, m) {
         py::arg("builder"),
         py::arg("x"),
         py::return_value_policy::reference);
+
+    m.def("glsl_get_explicit_size", &glsl_get_explicit_size,
+        py::arg("type"),
+        py::arg("align_to_stride"));
 }
