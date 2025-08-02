@@ -13,7 +13,8 @@ $(PACKAGE): $(WHEEL)
 	updpkgsums
 	makepkg -f
 $(WHEEL): bindings.cpp
-	python -m build --wheel
+	#python -m build --wheel
+	python -m build --wheel -Csetup-args="-Dbuildtype=debug" # For debuginfo
 clean:
 	rm -rf dist pkg src *.zst *.whl
 	yay -R python-mesa3d
