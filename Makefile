@@ -19,6 +19,6 @@ clean:
 	rm -rf dist pkg src *.zst *.whl
 	yay -R python-mesa3d
 gdb:
-	gdb -ex=r --directory=./subprojects --args python test.py
+	LD_PRELOAD=/usr/lib/libasan.so.8 ASAN_OPTIONS=detect_leaks=0 gdb -ex=r --directory=./subprojects --args python test.py
 
 .PHONY: all build gdb install clean

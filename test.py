@@ -1,14 +1,15 @@
 import mesa3d
 
-stage = mesa3d.gl_shader_stage.COMPUTE
-info = mesa3d.shader_info()
-info.stage = stage
-options = mesa3d.nir_shader_compiler_options()
-shader = mesa3d.nir_shader_create(None, stage, options, info)
-builder = mesa3d.nir_builder_init_simple_shader(stage, options, "simple")
-const_index = mesa3d.nir_imm_int(builder, 3)
-bit_size = mesa3d.get_nir_def_bit_size(const_index)
-print(bit_size)
+mesa3d.test_gonsolo()
+#stage = mesa3d.gl_shader_stage.COMPUTE
+#info = mesa3d.shader_info()
+#info.stage = stage
+#options = mesa3d.nir_shader_compiler_options()
+#shader = mesa3d.nir_shader_create(None, stage, options, info)
+#builder = mesa3d.nir_builder_init_simple_shader(stage, options, "simple")
+#const_index = mesa3d.nir_imm_int(builder, 3)
+#bit_size = mesa3d.get_nir_def_bit_size(const_index)
+#print(bit_size)
 #print(const_index.bit_size)
 
 #main = mesa3d.nir_function_create(shader, "main")

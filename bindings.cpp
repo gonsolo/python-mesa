@@ -11,6 +11,16 @@
 
 namespace py = pybind11;
 
+static void test_gonsolo() {
+  gl_shader_stage stage = MESA_SHADER_COMPUTE;
+  shader_info info;
+  info.stage = stage;
+  nir_shader_compiler_options options;
+  nir_builder builder = nir_builder_init_simple_shader(stage, &options, "simple");
+  nir_def* const_index = nir_imm_int(&builder, 3);
+  printf("test_gonsolo: bit_size: %u\n", const_index->bit_size);
+}
+
 static nir_builder
 nir_builder_init_simple_shader_wrapper(gl_shader_stage stage,
                                       const nir_shader_compiler_options *options,
@@ -283,4 +293,6 @@ PYBIND11_MODULE(mesa3d, m) {
     m.def("get_nir_def_bit_size", &get_nir_def_bit_size,
       py::arg("def"),
       "Returns the bit_size of a nir_def object.");
+
+    m.def("test_gonsolo", &test_gonsolo);
 }

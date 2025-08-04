@@ -33,7 +33,11 @@ mesa_dep = mesa_proj.get_variable('idep_nir')
 
 # --- Check for platform features and add preprocessor defines ---
 cc = meson.get_compiler('cpp')
-extra_args = []
+extra_args = [
+  #    '-fpack-struct',
+  #  '-Wpadded',
+  #  '-Werror=padded'
+]
 
 # Check for pthreads and add HAVE_PTHREAD if found
 pthreads_dep = dependency('threads', required: false)
