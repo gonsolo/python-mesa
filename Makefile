@@ -4,7 +4,7 @@ PACKAGE=python-mesa3d-$(VERSION)-1-x86_64.pkg.tar.zst
 
 all: install run
 run:
-	python test.py
+	LD_PRELOAD=/usr/lib/libasan.so.8 ASAN_OPTIONS=detect_leaks=0 python test.py
 install: build
 	makepkg -si --noconfirm
 build: $(PACKAGE)
@@ -14,11 +14,11 @@ $(PACKAGE): $(WHEEL)
 	makepkg -f
 $(WHEEL): bindings.cpp
 	#python -m build --wheel
-	python -m build --wheel -Csetup-args="-Dbuildtype=debug" # For debuginfo
+	python -m build --wheel -Csetup-args="-Dbuildtype=debug" -Csetup-args="-Db_sanitize=address"
 clean:
 	rm -rf dist pkg src *.zst *.whl
 	yay -R python-mesa3d
 gdb:
-	gdb -ex=r --args python test.py
+	gdb -ex=r --directory=./subprojects --args python test.py
 
 .PHONY: all build gdb install clean

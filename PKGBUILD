@@ -11,7 +11,7 @@ license=('GPL')
 depends=('python')
 makedepends=('python-build' 'python-installer')
 source=("${whlname}-${pkgver}-cp313-cp313-linux_x86_64.whl")
-sha256sums=('b3217117db25d7c089e5b68cfb97f522d661f49e390105e7c14c7abb521cc97a')
+sha256sums=('38f408e70a3730684e7de40a316b07f966fd7b8eef10305466fb2552d8aaaa7a')
 
 build() {
   # This section is not needed for a pre-built wheel, so we can leave it empty or remove it.

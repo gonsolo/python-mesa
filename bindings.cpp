@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include "pybind11/detail/common.h"
@@ -22,6 +24,29 @@ py::object wrap_nir_load_ssbo(py::object builder, int num_components, int bit_si
     nir_def* s1 = py::cast<nir_def*>(src1);
 
     return py::cast(nir_load_ssbo(b, num_components, bit_size, s0, s1));
+}
+
+nir_def *
+wrap_nir_imm_int(nir_builder *build, int x)
+{
+  assert(build);
+  nir_def *result = nir_imm_int(build, x);
+  assert(result);
+  if (result == nullptr) {
+    std::cout << "result is nullptr" << std::endl;
+  } else {
+    std::cout << "result bit size: " << result->bit_size << std::endl;
+  }
+  return result;
+}
+
+
+// This wrapper function takes a nir_def* and returns its bit_size
+unsigned int get_nir_def_bit_size(nir_def* def) {
+    if (def == nullptr) {
+        return 0;
+    }
+    return def->bit_size;
 }
 
 PYBIND11_MODULE(mesa3d, m) {
@@ -175,11 +200,20 @@ PYBIND11_MODULE(mesa3d, m) {
         .value("nir_type_float32", nir_type_float32)
         .export_values();
 
-    py::class_<nir_def> nir_def_class(m, "nir_def");
+    py::class_<nir_def> (m, "nir_def")
+        .def_readonly("bit_size", &nir_def::bit_size);
 
-    m.def("nir_imm_int", &nir_imm_int,
+    m.def("nir_imm_int", &wrap_nir_imm_int,
+        "Wrapper for nir_imm_int",
         py::arg("builder"),
         py::arg("x"),
+        py::return_value_policy::reference,
+        py::keep_alive<1, 0>());
+
+    m.def("nir_imm_intN_t", &nir_imm_intN_t,
+        py::arg("builder"),
+        py::arg("x"),
+        py::arg("bit_size"),
         py::return_value_policy::reference);
 
     m.def("nir_imm_float", &nir_imm_float,
@@ -227,4 +261,25 @@ PYBIND11_MODULE(mesa3d, m) {
     py::class_<nir_block> nir_block_class(m, "nir_block");
 
     py::class_<nir_cursor> nir_cursor_class(m, "nir_cursor");
+
+    m.def("nir_build_deref_var", &nir_build_deref_var,
+        py::arg("builder"),
+        py::arg("var"),
+        py::return_value_policy::reference);
+
+    py::class_<nir_deref_instr> nir_deref_instr_class(m, "nir_deref_instr");
+
+    m.def("nir_build_deref_array", &nir_build_deref_array,
+        py::arg("builder"),
+        py::arg("parent"),
+        py::arg("index"),
+        py::return_value_policy::reference);
+
+    m.def("nir_const_value_for_raw_uint", &nir_const_value_for_raw_uint,
+        py::arg("x"),
+        py::arg("bit_size"));
+
+    m.def("get_nir_def_bit_size", &get_nir_def_bit_size,
+      py::arg("def"),
+      "Returns the bit_size of a nir_def object.");
 }
