@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <pybind11/pybind11.h>
+#include <pybind11/native_enum.h>
 #include <pybind11/stl.h>
 #include "pybind11/detail/common.h"
 
@@ -65,9 +66,10 @@ PYBIND11_MODULE(mesa3d, m) {
         }
     }, "Frees a ralloc memory context.", py::arg("ctx"));
 
-    py::enum_<gl_shader_stage>(m, "gl_shader_stage")
+    py::native_enum<gl_shader_stage>(m, "gl_shader_stage", "enum.IntEnum")
         .value("COMPUTE", MESA_SHADER_COMPUTE)
-        .export_values();
+        .export_values()
+        .finalize();
 
     py::class_<nir_shader_compiler_options>(m, "nir_shader_compiler_options")
         .def(py::init<>())
@@ -126,8 +128,7 @@ PYBIND11_MODULE(mesa3d, m) {
     m.def("nir_builder_init_simple_shader", &nir_builder_init_simple_shader_wrapper,
         py::arg("stage"),
         py::arg("options"),
-        py::arg("name"),
-        py::return_value_policy::reference);
+        py::arg("name"));
 
     m.def("nir_shader_get_function_for_name", &nir_shader_get_function_for_name,
         py::arg("shader"),
