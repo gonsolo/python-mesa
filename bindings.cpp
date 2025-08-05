@@ -11,14 +11,50 @@
 
 namespace py = pybind11;
 
-static void test_gonsolo() {
-  gl_shader_stage stage = MESA_SHADER_COMPUTE;
-  shader_info info;
-  info.stage = stage;
-  nir_shader_compiler_options options;
-  nir_builder builder = nir_builder_init_simple_shader(stage, &options, "simple");
-  nir_def* const_index = nir_imm_int(&builder, 3);
-  printf("test_gonsolo: bit_size: %u\n", const_index->bit_size);
+//static void test_gonsolo() {
+//  glsl_type_singleton_init_or_ref();
+//  gl_shader_stage stage = MESA_SHADER_COMPUTE;
+//  nir_shader_compiler_options options = {};
+//  nir_builder builder = nir_builder_init_simple_shader(stage, &options, "simple");
+//  nir_def* const_index = nir_imm_int(&builder, 3);
+//  printf("test_gonsolo: bit_size: %u\n", const_index->bit_size);
+//  ralloc_free(builder.shader);
+//  glsl_type_singleton_decref();
+//}
+
+#include <stdio.h>
+#include "compiler/nir/nir_builder.h"
+#include "compiler/nir/nir.h"
+#include "compiler/nir/nir_builder_opcodes.h"
+
+void test_gonsolo() {
+    glsl_type_singleton_init_or_ref();
+    gl_shader_stage stage = MESA_SHADER_COMPUTE;
+    nir_shader_compiler_options options = {};
+    nir_builder builder = nir_builder_init_simple_shader(stage, &options, "simple");
+
+    // Add a couple of instructions to the shader
+    nir_def* val1 = nir_imm_int(&builder, 3);
+    nir_def* val2 = nir_imm_int(&builder, 5);
+    nir_def* sum = nir_iadd(&builder, val1, val2);
+
+    // Require the necessary metadata before running the pass
+    nir_metadata_require(builder.shader, nir_metadata_block_index | nir_metadata_dominance);
+
+    printf("--- Original Shader ---\n");
+    nir_print_shader(builder.shader, stdout);
+    printf("\n\n");
+
+    // Run a set of optimization passes (the NAK compiler is a set of these passes)
+    nir_run_passes(builder.shader, "opt_algebraic", false);
+    nir_run_passes(builder.shader, "opt_constant_folding", false);
+    nir_run_passes(builder.shader, "opt_dce", false);
+
+    printf("--- Optimized Shader ---\n");
+    nir_print_shader(builder.shader, stdout);
+
+    // Clean up
+    ralloc_free(builder.shader);
 }
 
 static nir_builder

@@ -7,8 +7,6 @@ project('python-mesa3d', 'cpp', version: '0.1.0',
 python = import('python').find_installation()
 pybind11_dep = dependency('pybind11', version: '>=3.0', required: true)
 
-run_command('python', '-c', 'import subprocess, sys; print("--- Installed packages in isolated venv ---"); subprocess.run([sys.executable, "-m", "pip", "freeze"])')
-
 # --- Use Mesa as a subproject ---
 # The Mesa source code must be in the 'subprojects/mesa' directory.
 # Meson will configure and build it directly.

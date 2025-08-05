@@ -21,4 +21,8 @@ clean:
 gdb:
 	LD_PRELOAD=/usr/lib/libasan.so.8 ASAN_OPTIONS=detect_leaks=0 gdb -ex=r --directory=./subprojects --args python test.py
 
-.PHONY: all build gdb install clean
+# Setup build dir for syntax checking
+# meson setup build -Dbuildtype=debug -Db_sanitize=address
+check:
+	cd build; ninja
+.PHONY: all build check gdb install clean
