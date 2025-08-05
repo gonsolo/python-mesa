@@ -27,33 +27,41 @@ namespace py = pybind11;
 #include "compiler/nir/nir.h"
 #include "compiler/nir/nir_builder_opcodes.h"
 
+#include <stdio.h>
+#include "compiler/nir/nir.h"
+#include "compiler/nir/nir_builder.h"
+
 void test_gonsolo() {
     glsl_type_singleton_init_or_ref();
     gl_shader_stage stage = MESA_SHADER_COMPUTE;
     nir_shader_compiler_options options = {};
     nir_builder builder = nir_builder_init_simple_shader(stage, &options, "simple");
 
-    // Add a couple of instructions to the shader
     nir_def* val1 = nir_imm_int(&builder, 3);
+    assert(val1->num_components == 1);
+    assert(val1->bit_size == 32);
+
     nir_def* val2 = nir_imm_int(&builder, 5);
     nir_def* sum = nir_iadd(&builder, val1, val2);
 
-    // Require the necessary metadata before running the pass
-    nir_metadata_require(builder.shader, nir_metadata_block_index | nir_metadata_dominance);
+    // Um die Warnung "Variable wird nicht verwendet" zu beheben
+    (void)sum;
 
     printf("--- Original Shader ---\n");
     nir_print_shader(builder.shader, stdout);
     printf("\n\n");
 
-    // Run a set of optimization passes (the NAK compiler is a set of these passes)
-    nir_run_passes(builder.shader, "opt_algebraic", false);
-    nir_run_passes(builder.shader, "opt_constant_folding", false);
-    nir_run_passes(builder.shader, "opt_dce", false);
+    // Korrekter Aufruf: builder.impl statt builder.shader
+    nir_metadata_require(builder.impl, nir_metadata_block_index | nir_metadata_dominance);
+
+    // Rufen Sie jeden Pass einzeln auf
+    nir_opt_algebraic(builder.shader);
+    nir_opt_constant_folding(builder.shader);
+    nir_opt_dce(builder.shader);
 
     printf("--- Optimized Shader ---\n");
     nir_print_shader(builder.shader, stdout);
 
-    // Clean up
     ralloc_free(builder.shader);
 }
 
